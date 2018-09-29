@@ -39,6 +39,12 @@ private:
 	// Return hit for the object in reach.
 	const FHitResult GetFirstPhysicsBodyInReach();
 
+	// Returns current start of reach line for raycasting.
+	FVector GetReachLineStart();
+
+	// Returns current end of reach line for raycasting.
+	FVector GetReachLineEnd();
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
