@@ -27,41 +27,36 @@ void UOpenDoor::BeginPlay()
 	}
 }
 
-void UOpenDoor::OpenDoor()
-{
-	if (!Owner)
-	{
-		return;
-	}
-
-	Owner->SetActorRotation(FRotator(0.0f, openAngle, 0.0f));
-}
-
-void UOpenDoor::CloseDoor()
-{
-	if (!Owner)
-	{
-		return;
-	}
-
-	Owner->SetActorRotation(FRotator(0.0f, 0.0f, 0.0f));
-}
-
 // Called every frame
 void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (GetTotalMassOnPlate() > 50.0f)
+	if (GetTotalMassOnPlate() > triggerMass)
 	{
-		OpenDoor();
-		lastDoorOpenTime = GetWorld()->GetTimeSeconds();
+		if (!Owner)
+		{
+			return;
+		}
+
+		onOpenRequest.Broadcast();
+
+		//lastDoorOpenTime = GetWorld()->GetTimeSeconds();
+	}
+	else
+	{
+		if (!Owner)
+		{
+			return;
+		}
+
+		onCloseRequest.Broadcast();
 	}
 
-	if (GetWorld()->GetTimeSeconds() - lastDoorOpenTime > doorCloseDelay)
+	/*if (GetWorld()->GetTimeSeconds() - lastDoorOpenTime > doorCloseDelay)
 	{
-		CloseDoor();
-	}
+		//CloseDoor();
+	}*/
 }
 
 float UOpenDoor::GetTotalMassOnPlate()
